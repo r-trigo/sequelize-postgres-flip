@@ -1,0 +1,9 @@
+---
+- hosts: all
+  gather_facts: yes
+  become: yes
+  roles:
+    - postgres_12
+    - ssh
+    - repmgr
+    - registration

@@ -1,0 +1,4 @@
+[all]
+pg1 ansible_host=<pg1_droplet_ipv4> connection_host="<pg1_droplet_ipv4>" node_id=1 role="primary"
+pg2 ansible_host=<pg2_droplet_ipv4> connection_host="<pg2_droplet_ipv4>" node_id=2 role="standby"
+pg3 ansible_host=<pg3_droplet_ipv4> connection_host="<pg3_droplet_ipv4>" node_id=3 role="witness"

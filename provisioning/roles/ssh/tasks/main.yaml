@@ -1,0 +1,41 @@
+- name: Install OpenSSH
+  apt:
+    name: openssh-server
+    update_cache: yes
+    state: present
+
+- name: Create postgres SSH directory
+  file:
+    mode: '0755'
+    owner: postgres
+    group: postgres
+    path: /var/lib/postgresql/.ssh/
+    state: directory
+
+- name: Copy SSH private key
+  copy:
+    src: "keys/id_rsa"
+    dest: /var/lib/postgresql/.ssh/id_rsa
+    owner: postgres
+    group: postgres
+    mode: '0600'
+
+- name: Copy SSH public key
+  copy:
+    src: "keys/id_rsa.pub"
+    dest: /var/lib/postgresql/.ssh/id_rsa.pub
+    owner: postgres
+    group: postgres
+    mode: '0644'
+
+- name: Add key to authorized keys file
+  authorized_key:
+    user: postgres
+    state: present
+    key: "{{ lookup('file', 'keys/id_rsa.pub') }}"
+
+- name: Restart SSH service
+  service:
+    name: sshd
+    enabled: yes
+    state: restarted

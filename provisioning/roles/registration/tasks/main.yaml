@@ -1,0 +1,49 @@
+- name: Register primary node
+  become_user: postgres
+  shell: repmgr primary register
+  ignore_errors: yes
+  when: role == "primary"
+
+- name: Stop PostgreSQL
+  systemd:
+    name: postgresql
+    state: stopped
+  when: role == "standby"
+
+- name: Clean up PostgreSQL data directory
+  become_user: postgres
+  file:
+    path: /var/lib/postgresql/{{ pg_version }}/main
+    force: yes
+    state: absent
+  when: role == "standby"
+
+- name: Clone primary node data
+  become_user: postgres
+  shell: repmgr -h {{ node1_ip }} -U repmgr -d repmgr standby clone
+  ignore_errors: yes
+  when: role == "standby"
+
+- name: Start PostgreSQL
+  systemd:
+    name: postgresql
+    state: started
+  when: role == "standby"
+
+- name: Register {{ role }} node
+  become_user: postgres
+  shell: repmgr -h {{ node1_ip }} {{ role }} register -F
+  ignore_errors: yes
+  when: role != "primary"
+
+- name: Start repmgrd
+  become_user: postgres
+  shell: /usr/bin/repmgrd
+  ignore_errors: yes
+
+- name: Schedule repmgrd to start on reboot
+  become_user: postgres
+  cron:
+    name: "a job for reboot"
+    special_time: reboot
+    job: "/usr/bin/repmgrd"

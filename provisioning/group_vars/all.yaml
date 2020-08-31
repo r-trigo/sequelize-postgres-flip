@@ -1,0 +1,5 @@
+client_ip: "<your_gateway_ipv4>"
+node1_ip: "<pg1_droplet_ipv4>"
+node2_ip: "<pg2_droplet_ipv4>"
+node3_ip: "<pg3_droplet_ipv4>"
+pg_version: "12"

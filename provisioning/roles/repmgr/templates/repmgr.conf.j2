@@ -1,0 +1,21 @@
+node_id = {{ node_id }}
+node_name = 'node{{ node_id }}'
+conninfo = 'host={{ connection_host }} user=repmgr dbname=repmgr'
+data_directory = '/var/lib/postgresql/{{ pg_version }}/main'
+use_replication_slots = yes
+reconnect_attempts = 5
+reconnect_interval = 1
+failover = automatic
+pg_bindir = '/usr/lib/postgresql/{{ pg_version }}/bin'
+promote_command = '/var/lib/postgresql/promote-standby.sh'
+follow_command = 'repmgr standby follow -f /etc/repmgr.conf'
+log_level = INFO
+log_file = '/var/log/postgresql/repmgr.log'
+
+
+#monitoring_history=yes
+#monitor_interval_secs=5
+#log_status_interval=5
+#promote_check_timeout=5
+#promote_check_interval=1
+#master_response_timeout=5

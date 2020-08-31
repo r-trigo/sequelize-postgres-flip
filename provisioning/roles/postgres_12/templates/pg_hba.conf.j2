@@ -1,0 +1,31 @@
+# Database administrative login by Unix domain socket
+local   all             postgres                                peer
+
+# TYPE  DATABASE        USER            ADDRESS                 METHOD
+
+# "local" is for Unix domain socket connections only
+local   all             all                                     peer
+# IPv4 local connections:
+host    all             all             127.0.0.1/32            md5
+# IPv6 local connections:
+host    all             all             ::1/128                 md5
+# Allow replication connections from localhost, by a user with the
+# replication privilege.
+local   replication     all                                     peer
+host    replication     all             127.0.0.1/32            md5
+host    replication     all             ::1/128                 md5
+
+# repmgr
+local   replication   repmgr                              trust
+host    replication   repmgr      127.0.0.1/32            trust
+host    replication   all         {{ client_ip }}/32      trust
+host    replication   repmgr      {{ node1_ip }}/32       trust
+host    replication   repmgr      {{ node2_ip }}/32       trust
+host    replication   repmgr      {{ node3_ip }}/32       trust
+
+local   repmgr        repmgr                              trust
+host    repmgr        repmgr      127.0.0.1/32            trust
+host    all           all         {{ client_ip }}/32      trust
+host    repmgr        repmgr      {{ node1_ip }}/32       trust
+host    repmgr        repmgr      {{ node2_ip }}/32       trust
+host    repmgr        repmgr      {{ node3_ip }}/32       trust
